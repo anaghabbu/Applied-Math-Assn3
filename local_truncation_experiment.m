@@ -15,12 +15,12 @@ function local_truncation_experiment()
 
     % Single step function methods
     forEu = @forward_euler_step
-    expMid = @explicit_midpoint_step}
+    expMid = @explicit_midpoint_step
 
     h_step = logspace(-5, 1, 100) % 1e-5 to 1e1 100 points
     figure; hold on;
 
-    for i = 1:length(methods)
+    for i = 1:length(forEu)
         errs = zeros(size(h_step));
         for r = 1:length(h_step)
             h = h_step(i)
@@ -29,11 +29,11 @@ function local_truncation_experiment()
             [XB, ~] = expMid(rate, tref, XA, h);  % one step from exact state
             X_true = sol(tref + h);
             errs(i) = norm(XB - X_true);        % norm handles vector/scalar
+            [p,k] = loglog_fit(h, errs(i), 1);
+            plot(errs(i), h);
+            
         end
         % is y = k*x^p the same as e = O*h^p? 
         % [p,k] = loglog_fit(h_step, errs, 1)
-
-    end
-
-    
+    end   
 end
