@@ -1,9 +1,9 @@
 function assn3_test()
 
-    tspan = [3, 12];
+    tspan = [3, ];
     X0 = 1;
     h_ref = 2;
-    h_values = [0.2, 0.1, 0.05, 0.02]; % using a few diff time steps
+    h_values = [0.5, 0.25, 0.1, 0.05]; % using a few diff time steps
 
     forward_euler_fixed_step_integration(@rate_func01,tspan,X0,h_ref)
 

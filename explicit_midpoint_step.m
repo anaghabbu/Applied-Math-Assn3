@@ -16,6 +16,6 @@ function [XB,num_evals] = explicit_midpoint_step(rate_func_in,t,XA,h)
     X_mid = XA + h/2*rate_func_in(t, XA); % midpoint estimate
     % num_evals = 1; 
     XB  = XA +  h*rate_func_in(t  + h/2, X_mid); % Uses midpoints slop 
-    num_evals = 2;
+    num_evals = 2; % count function evals (you call rate function twice)
 
 end
