@@ -13,9 +13,9 @@
 % rate_func_in when computing the next step
 function [XB,num_evals] = explicit_midpoint_step(rate_func_in,t,XA,h)
 
-    X_mid = XA + h/2*rate_func_in(t, XA);
+    X_mid = XA + h/2*rate_func_in(t, XA); % midpoint estimate
     % num_evals = 1; 
-    XB  = XA +  h*rate_func_in(t  + h/2, X_mid);
+    XB  = XA +  h*rate_func_in(t  + h/2, X_mid); % Uses midpoints slop 
     num_evals = 2;
 
 end
