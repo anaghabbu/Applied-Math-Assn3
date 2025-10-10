@@ -58,8 +58,8 @@ function local_truncation_experiment2()
     [p3,k3] = loglog_fit(h_step, errs_Mid, filter_params);
 
     loglog(h_step,k1*h_step.^p1,'g','LineWidth',1)
-    loglog(h_step,k2*h_step.^p2,'r','LineWidth',1)
-    loglog(h_step,k3*h_step.^p3,'b','LineWidth',1)
+    loglog(h_step,k2*h_step.^p2,'g','LineWidth',1)
+    loglog(h_step,k3*h_step.^p3,'g','LineWidth',1)
 
 
     % is y = k*x^p the same as e = O*h^p? 
