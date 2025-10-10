@@ -12,12 +12,14 @@
 %num_evals: A count of the number of times that you called
 % rate_func_in when computing the next step
 function [XB,num_evals] = backward_euler_step(rate_func_in,t,XA,h)
+    G = @(X_in) XA +  h*rate_func_in(t + h, X_in)  -  X_in;
+
+    solver_params  = 
+    [XB, num_evals]  = multi_newton_solver2(G,XA,solver_params)
     
-    Xn_1  = multi_newton_solver2(fun,x_guess,solver_params)
-    
-    G_xnplus1 = XA + h*rate_func_in(t + h, )
+    % G_xnplus1 = XA + h*rate_func_in(t + h, )
 
    
 
-    G(Xn+1) = Xn + hf (tn + h, Xn+1) − Xn+1 = 0
+    % G(Xn+1) = Xn + hf (tn + h, Xn+1) − Xn+1 = 0
 end

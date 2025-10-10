@@ -20,6 +20,7 @@ function local_truncation_experiment()
     h_step = logspace(-5, 1, 100) % 1e-5 to 1e1 100 points
     figure; hold on;
 
+<<<<<<< Updated upstream
 
         errs = zeros(size(h_step));
         for i = 1:length(h_step)
@@ -57,4 +58,35 @@ function local_truncation_experiment()
         % is y = k*x^p the same as e = O*h^p? 
         % [p,k] = loglog_fit(h_step, errs, 1)
 
+=======
+    analytical_diff  = zeros(size(h_step));
+    errs_FE = zeros(size(h_step));
+    errs_Mid = zeros(size(h_step));
+
+    XA = sol(tref); % finding exact X at the tref X spot
+
+    for r = 1:length(h_step)
+        h = h_step(r);
+
+        
+        [XB_FE, ~] = forEu(rate, tref, XA, h);  % one step from exact state
+        [XB_Mid, ~] = expMid(rate, tref, XA, h);  % one step from exact state
+        X_true = sol(tref + h);
+
+        analytical_diff(r) = norm(X_true - XA);
+        errs_FE(r) = norm(XB_FE - X_true);
+        errs_Mid(r) = norm(XB_Mid - X_true);
+
+        % errs(i) = norm(XB - X_true);        % norm handles vector/scalar
+
+    end
+    % [p,k] = loglog_fit(h, errs(i), 1);
+    % plot(errs(i), h);
+    
+    loglog()
+
+    % is y = k*x^p the same as e = O*h^p? 
+    % [p,k] = loglog_fit(h_step, errs, 1)
+ 
+>>>>>>> Stashed changes
 end

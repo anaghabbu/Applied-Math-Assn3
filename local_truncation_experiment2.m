@@ -8,7 +8,7 @@
 %[p,k]: the regressed values for relationship y = k*x^p
 %function [p,k] = loglog_fit(x_regression,y_regression,varargin)
 
-function local_truncation_experiment()
+function local_truncation_experiment2()
     tref = 0.492;
     sol = @solution01;
     rate = @rate_func01;
@@ -23,45 +23,6 @@ function local_truncation_experiment()
     errs_FE = zeros(size(h_step));
     errs_Mid = zeros(size(h_step));
 
-<<<<<<< Updated upstream
-
-        errs = zeros(size(h_step));
-        for i = 1:length(h_step)
-            h = h_step(i);
-            XA = sol(tref); % finding exact X at the tref X spot
-            [XB, ~] = forEu(rate, tref, XA, h);  % one step from exact state
-            X_true = sol(tref + h);
-            errs(i) = norm(XB - X_true);        % norm handles vector/scalar
-
-        end
-        [p,k] = loglog_fit(h_step(:), errs(:)); % converts to column vectors
-        loglog(h_step, errs, 'o-'); hold on;
-        disp(p);
-        disp(k);
-        xlabel('h (step size)');
-        ylabel('Error');
-        legend('Forward Euler', 'Explicit Midpoint');
-% 
-        for i = 1:length(h_step)
-            h = h_step(i);
-            XA = sol(tref); % finding exact X at the tref X spot
-            [XB, ~] = expMid(rate, tref, XA, h);  % one step from exact state
-            X_true = sol(tref + h);
-            errs(i) = norm(XB - X_true);        % norm handles vector/scalar
-           
-        end
-        [p,k] = loglog_fit(h_step(:), errs(:));
-        loglog(h_step, errs, 'o-');
-        disp(p);
-        disp(k);
-        xlabel('h (step size)');
-        ylabel('Error');
-        legend('Forward Euler', 'Explicit Midpoint');
-
-        % is y = k*x^p the same as e = O*h^p? 
-        % [p,k] = loglog_fit(h_step, errs, 1)
-
-=======
     XA = sol(tref); % finding exact X at the tref X spot
 
     for r = 1:length(h_step)
@@ -102,5 +63,4 @@ function local_truncation_experiment()
     % is y = k*x^p the same as e = O*h^p? 
     % [p,k] = loglog_fit(h_step, errs, 1)
  
->>>>>>> Stashed changes
 end
