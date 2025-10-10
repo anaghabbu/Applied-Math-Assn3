@@ -1,6 +1,4 @@
-% WORK IN PROGRESS. I think my function calls are wrong and 
-% I need to incorporate loglog_fit but not sure how
-% MAYBE [p,k] = loglog_fit(h_step, errs, 1)
+% CURRENT
 
 % Local: the error for a single time step
 % log-log fit to estimate order p

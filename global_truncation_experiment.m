@@ -1,57 +1,57 @@
-
-% GLOBAL: the error across the entire integration interval
-% log-log fit to estimate order p
-
-
 function global_truncation_experiment()
+
     t0 = 0;
     tf = 1;
-    t_interval = [t0, tf];
-    sol = @solution01;
+    sol = @solution01;    
     rate = @rate_func01;
 
-    % Single step function methods
-    forEu = @forward_euler_fixed_step_integration
-    expMid = @explicit_midpoint_fixed_step_integration
+    X0 = sol(t0);  
+    X_true = sol(tf);   
 
-    h_step = logspace(-5, 1, 100) % 1e-5 to 1e1 100 points
-    figure; hold on;
+    forEu = @forward_euler_fixed_step_integration;
+    expMid = @explicit_midpoint_fixed_step_integration;
 
+    h_step = logspace(-5, -0.1, 50); 
 
-        errs = zeros(size(h_step));
-        for i = 1:length(h_step)
-            h = h_step(i);
-            XA = sol(t_interval); % finding exact X at the tref X spot
-            [XB, ~] = forEu(rate, t_interval, XA, h);  % one step from exact state
-            X_true = sol(t_interval + h);
-            errs(i) = norm(XB - X_true);        % norm handles vector/scalar
+    errs_FE  = zeros(size(h_step));
+    errs_Mid = zeros(size(h_step));
+    nfe_FE   = zeros(size(h_step));
+    nfe_Mid  = zeros(size(h_step));
 
-        end
-        [p,k] = loglog_fit(h_step(:), errs(:)); % converts to column vectors
-        loglog(h_step, errs, 'o-'); hold on;
-        disp(p);
-        disp(k);
-        xlabel('h (step size)');
-        ylabel('Error');
-        legend('Forward Euler', 'Explicit Midpoint');
-% 
-        for i = 1:length(h_step)
-            h = h_step(i);
-            XA = sol(tref); % finding exact X at the tref X spot
-            [XB, ~] = expMid(rate, t_interval, XA, h);  % one step from exact state
-            X_true = sol(t_interval + h);
-            errs(i) = norm(XB - X_true);        % norm handles vector/scalar
-           
-        end
-        [p,k] = loglog_fit(h_step(:), errs(:));
-        loglog(h_step, errs, 'k-');
-        disp(p);
-        disp(k);
-        xlabel('h (step size)');
-        ylabel('Error');
-        legend('Forward Euler', 'Explicit Midpoint');
+    % Step Size Loop
+    for r = 1:length(h_step)
+        h = h_step(r);
 
-        % is y = k*x^p the same as e = O*h^p? 
-        % [p,k] = loglog_fit(h_step, errs, 1)
+        % Forward Euler
+        [t_FE, X_FE, h_avg_FE, num_evals_FE] = forEu(rate, [t0 tf], X0, h);
+        X_FE_final = X_FE(end,:)';
+        errs_FE(r) = norm(X_FE_final - X_true);
+        nfe_FE(r) = num_evals_FE;
 
+        % Midpoint
+        [t_Mid, X_Mid, h_avg_Mid, num_evals_Mid] = expMid(rate, [t0 tf], X0, h);
+        X_Mid_final = X_Mid(end,:)';
+        errs_Mid(r) = norm(X_Mid_final - X_true);
+        nfe_Mid(r)  = num_evals_Mid;
+    end
+
+    % Error vs Step Size
+    figure(1); clf
+    loglog(h_step, errs_FE,  'ro', 'MarkerFaceColor','r', 'MarkerSize',4); hold on
+    loglog(h_step, errs_Mid, 'bo', 'MarkerFaceColor','b', 'MarkerSize',4);
+
+    filter_params = struct();
+    filter_params.max_xval = 1;
+
+    [p_FE, k_FE]   = loglog_fit(h_step, errs_FE, filter_params);
+    [p_Mid, k_Mid] = loglog_fit(h_step, errs_Mid, filter_params);
+
+    loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1.5);
+    loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1.5);
+
+    legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
+
+    xlabel('Step size h');
+    ylabel('Global truncation error');
+    title('Global Truncation Error vs Step Size');
 end
