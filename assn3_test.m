@@ -12,7 +12,9 @@ function assn3_test()
 
     explicit_midpoint_fixed_step_integration(@rate_func01,tspan,X0,h_ref)
 
-    fixed_step_integration(@rate_func01,@backward_euler_step,tspan,X0,h_ref)
+    fixed_step_integration(@rate_func01, @backward_euler_step,tspan,X0,h_ref)
+    fixed_step_integration(@rate_func01, @implicit_midpoint_step,tspan,X0,h_ref)
+
     
     figure;
     t_exact = linspace(tspan(1), tspan(2), 1000); % Create a vector of 1000 evenly spaced points in the interval [tspan(1),tspan(12)].
@@ -28,11 +30,13 @@ function assn3_test()
         [t_expMid, X_expMid] =  explicit_midpoint_fixed_step_integration(@rate_func01,tspan,X0,h);
         
         [t_impEu, X_impEu, h_avg, num_evals] = fixed_step_integration(@rate_func01,@backward_euler_step, tspan,X0,h);
+        [t_impMid, X_impMid, h_avg, num_evals] = fixed_step_integration(@rate_func01,@implicit_midpoint_step, tspan,X0,h);
 
         plot(t_forEu, X_forEu, 'm-', 'LineWidth', 1.5); hold on; 
         plot(t_expMid, X_expMid, 'b-', 'LineWidth', 1.5);
         
-        plot(t_impEu, X_impEu, 'g-', 'LineWidth', 1.5); 
+        plot(t_impEu, X_impEu, 'g-', 'LineWidth', 1.5);
+        plot(t_impMid, X_impMid, 'p-', 'LineWidth', 1.5); 
     end    
     % To verify that your implementation is working, 
     % use it to solve the IVP described by equation 5. 
@@ -45,6 +49,4 @@ function assn3_test()
     title('Forward Euler vs. Explicit Midpoint');
     grid on;
 
-
-    
 end
