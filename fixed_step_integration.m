@@ -15,6 +15,21 @@
 
 function [t_list,X_list,h_avg, num_evals] = fixed_step_integration(rate_func_in,step_func,tspan,X0,h_ref)
 
+    n_steps = ceil((tspan(2) - tspan(1))/h_ref);
+    h_avg = (tspan(2) - tspan(1))/n_steps;
+    
+    t_list = linspace(tspan(1),tspan(2),n_steps+1)';
+    X_list =  zeros(length(t_list),length(X0));
+    
+    Xval =  X0;
+    X_list(1,:) = Xval;
+    
+    num_evals = 0;
+    for n =  1:n_steps
+        [Xval, num_evals_temp] = step_func(rate_func_in, t_list(n), Xval, h_avg);
+        num_evals = num_evals + num_evals_temp;
+        X_list(n+1,:) = Xval';
+    end
 
 
 end

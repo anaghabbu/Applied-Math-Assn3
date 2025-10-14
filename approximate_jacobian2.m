@@ -1,4 +1,4 @@
-function J = approximate_jacobian2(fun, x)
+function [J,num_evals] = approximate_jacobian2(fun, x)
 % Approximate Jacobian of vector-valued function fun at point x
 
 % INPUTS:
@@ -13,7 +13,8 @@ function J = approximate_jacobian2(fun, x)
     m = length(f0); % number of outputs
     n = length(x); % number of variables
     J = zeros(m,n); % preallocate Jacobian
-    
+    num_evals = 0; 
+
     e = zeros(n,1);
 
     for j = 1:n
@@ -23,8 +24,9 @@ function J = approximate_jacobian2(fun, x)
 
         % Evaluate function at x+h and x-h
         f_plus  = fun(x + delta_x*e);
+        num_evals = num_evals + 1;
         f_minus = fun(x - delta_x*e);
-
+        num_evals = num_evals + 1;
         % Central difference approximation for j-th column
         J(:,j) = (f_plus - f_minus) / (2*delta_x);
 
