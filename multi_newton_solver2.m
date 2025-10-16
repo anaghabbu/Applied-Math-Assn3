@@ -21,8 +21,11 @@
 % solver_params.numerical_diff = 1e6;
 % %[x_root,success_flag] = my_solver(f,x_guess,solver_params);
 
+% Update 10/14/2025 (Pauline added num_evals to keep track of function calls)
 
-function [x_root, step_count] = multi_newton_solver2(fun,x_guess,solver_params)
+
+function [x_root, num_evals] = multi_newton_solver2(fun,x_guess,solver_params)
+
     %unpack values from struct (if fields in struct have been set)
  
     dxtol = solver_params.dxtol;
@@ -30,7 +33,7 @@ function [x_root, step_count] = multi_newton_solver2(fun,x_guess,solver_params)
     max_iter = solver_params.max_iter;
     dxmax = solver_params.dxmax;
     numerical_diff =  solver_params.numerical_diff;
-    
+    num_evals = 0;
     % 
     % [fval, J] = fun(x_guess);
     % 
@@ -43,19 +46,23 @@ function [x_root, step_count] = multi_newton_solver2(fun,x_guess,solver_params)
     
  
     if numerical_diff
-        'size of x_guess'
+        % size of x_guess
         size(x_guess)
         fval = fun(x_guess);
-        J = approximate_jacobian(fun, x_guess);
+        [J, Jnum] = approximate_jacobian2(fun, x_guess);
+        num_evals = num_evals + Jnum;
         
     else
         [fval,J] = fun(x_guess);
+        num_evals = num_evals + 1;
     end
 
     count = 0;
     delta_x = 1;
-    step_count = 0;
+    num_evals = 0;
+
     while count < max_iter && norm(fval)> ftol && norm(delta_x) > dxtol && norm(delta_x) < dxmax
+        
         count = count + 1;
 
         if numerical_diff
@@ -64,12 +71,13 @@ function [x_root, step_count] = multi_newton_solver2(fun,x_guess,solver_params)
             fval = fun(x_guess);
             % 'size fval'
             % size(fval)
-            J = approximate_jacobian(fun, x_guess);
-            step_count = step_count + 1;
+
+            [J, Jnum] = approximate_jacobian2(fun, x_guess);
+            num_evals = num_evals + 1;
          
         else
             [fval,J] = fun(x_guess);
-            step_count = step_count + 1;
+            num_evals = num_evals + 1;
         end
     
         delta_x = -J\fval;
@@ -78,13 +86,12 @@ function [x_root, step_count] = multi_newton_solver2(fun,x_guess,solver_params)
         
     end
     
-
     x_root = x_guess;
 
-    disp('Root is approx: ')
-    disp(x_root)
+    disp('Root is approx: ');
+    disp(x_root);
     
     f_check = fun(x_root);
-    disp('f(X_new) = ')
-    disp(f_check)
+    disp('f(X_new) = ');
+    disp(f_check);
 end

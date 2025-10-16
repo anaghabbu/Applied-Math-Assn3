@@ -13,11 +13,15 @@
 % rate_func_in when computing the next step
 function [XB,num_evals] = implicit_midpoint_step(rate_func_in,t,XA,h)
 
-    G = @(X_in) XA + h * rate_func_in(t + h/2, 0.5 * ( XA + X_in)) - X_in;
-    
-    solver_params  = ;
-    [XB, num_evals]  = multi_newton_solver2(G,XA,solver_params);
+    G = @(X_in) XA +  h*rate_func_in(t + h/2, 0.5 * (XA + X_in))  -  X_in;
 
-    % ADD step count to jacobian and fix? newton solver step count addition
+    solver_params = struct();
+    solver_params.dxtol = 1e-6;
+    solver_params.ftol = 1e-6;
+    solver_params.max_iter = 50;
+    solver_params.dxmax = 1e3;
+    solver_params.numerical_diff = true;
+
+    [XB, num_evals]  = multi_newton_solver2(G,XA,solver_params);    
 
 end
