@@ -59,6 +59,8 @@ function local_truncation_experiment2()
     loglog(h_step,k2*h_step.^p2,'r','LineWidth',1)
     loglog(h_step,k3*h_step.^p3,'b','LineWidth',1)
 
+    legend('Analytical Difference','Forward Euler', 'Backward Euler', 'Analytical difference fit line','Forward Euler fit line', 'Backward Euler fit line')
+    title('Local Truncation Error for Explicit Methods')
 
     % is y = k*x^p the same as e = O*h^p? 
     % [p,k] = loglog_fit(h_step, errs, 1)

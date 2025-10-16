@@ -12,6 +12,7 @@
 %num_evals: A count of the number of times that you called
 % rate_func_in when computing the next step
 function [XB,num_evals] = backward_euler_step(rate_func_in,t,XA,h)
+
     G = @(X_in) XA +  h*rate_func_in(t + h, X_in)  -  X_in;
     
     solver_params = struct();

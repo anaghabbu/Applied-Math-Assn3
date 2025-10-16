@@ -9,7 +9,6 @@ function assn3_test()
     h_values = [0.2, 0.1, 0.05, 0.02]; % using a few diff time steps
 
     forward_euler_fixed_step_integration(@rate_func01,tspan,X0,h_ref)
-
     explicit_midpoint_fixed_step_integration(@rate_func01,tspan,X0,h_ref)
 
     fixed_step_integration(@rate_func01, @backward_euler_step,tspan,X0,h_ref)

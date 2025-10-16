@@ -37,8 +37,8 @@ function global_truncation_experiment()
 
     % Error vs Step Size
     figure(1); clf
-    loglog(h_step, errs_FE,  'ro', 'MarkerFaceColor','r', 'MarkerSize',4); hold on
-    loglog(h_step, errs_Mid, 'bo', 'MarkerFaceColor','b', 'MarkerSize',4);
+    loglog(h_step, errs_FE,  'ro', 'MarkerFaceColor','r', 'MarkerSize',2); hold on
+    loglog(h_step, errs_Mid, 'bo', 'MarkerFaceColor','b', 'MarkerSize',2);
 
     filter_params = struct();
     filter_params.max_xval = 1;
@@ -46,12 +46,12 @@ function global_truncation_experiment()
     [p_FE, k_FE]   = loglog_fit(h_step, errs_FE, filter_params);
     [p_Mid, k_Mid] = loglog_fit(h_step, errs_Mid, filter_params);
 
-    loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1.5);
-    loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1.5);
+    loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1);
+    loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1);
 
     legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
 
-    xlabel('Step size h');
-    ylabel('Global truncation error');
-    title('Global Truncation Error vs Step Size');
+    xlabel('step size h');
+    ylabel('global truncation error');
+    title('Explicit Global Truncation Error vs Step Size');
 end
