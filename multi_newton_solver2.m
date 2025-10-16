@@ -22,7 +22,7 @@
 % %[x_root,success_flag] = my_solver(f,x_guess,solver_params);
 
 
-function [x_root] = multi_newton_solver2(fun,x_guess,solver_params)
+function [x_root, step_count] = multi_newton_solver2(fun,x_guess,solver_params)
     %unpack values from struct (if fields in struct have been set)
  
     dxtol = solver_params.dxtol;
@@ -54,7 +54,7 @@ function [x_root] = multi_newton_solver2(fun,x_guess,solver_params)
 
     count = 0;
     delta_x = 1;
-
+    step_count = 0;
     while count < max_iter && norm(fval)> ftol && norm(delta_x) > dxtol && norm(delta_x) < dxmax
         count = count + 1;
 
@@ -65,10 +65,11 @@ function [x_root] = multi_newton_solver2(fun,x_guess,solver_params)
             % 'size fval'
             % size(fval)
             J = approximate_jacobian(fun, x_guess);
-
+            step_count = step_count + 1;
          
         else
             [fval,J] = fun(x_guess);
+            step_count = step_count + 1;
         end
     
         delta_x = -J\fval;
