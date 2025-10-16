@@ -4,19 +4,19 @@ function explicit_vs_implicit_global()
     tf = 1;
     sol = @solution01;    
     rate = @rate_func01;
-
-    %h_ref = (tspan(2) - tspan(1))/n_steps;
+    tspan = [0, 10]; % tspan not working in this situation
+    h_ref = 0.01;
 
     X0 = sol(t0);  
     X_true = sol(tf);   
 
     forward_Eu = @forward_euler_fixed_step_integration;
-    backward_Eu = @fixed_step_integration(rate ,backward_euler_step,tspan,X0,h_ref);
+    backward_Eu = @fixed_step_integration;   %(rate, @backward_euler_step, [t0 tf],X0,h_ref);
 
     expMid = @explicit_midpoint_fixed_step_integration;
-    impMid = @fixed_step_integration(rate,implicit_midpoint_step,tspan,X0,h_ref);
+    impMid = @fixed_step_integration;  %(rate, @implicit_midpoint_step,[t0 tf],X0,h_ref);
 
-    h_step = logspace(-5, -0.1, 50); 
+    h_step = logspace(-4, -0.1, 50); 
 
     % errors
 
@@ -43,7 +43,7 @@ function explicit_vs_implicit_global()
         nfe_F(r) = num_evals_F;
 
         % Backward Euler
-        [t_B, X_B, h_avg_B, num_evals_B] = backward_Eu(rate, [t0 tf], X0, h);
+        [t_B, X_B, h_avg_B, num_evals_B] = backward_Eu(rate, @backward_euler_step,[t0 tf], X0, h);
         X_B_final = X_B(end,:)';
         errs_B(r) = norm(X_B_final - X_true);
         nfe_B(r) = num_evals_B;
@@ -55,7 +55,7 @@ function explicit_vs_implicit_global()
         nfe_exp_mid(r)  = num_evals_exp_mid;
 
          % Implicit Midpoint
-        [t_imp_mid , X_imp_mid , h_avg_imp_mid , num_evals_imp_mid ] = impMid(rate, [t0 tf], X0, h);
+        [t_imp_mid , X_imp_mid , h_avg_imp_mid , num_evals_imp_mid ] = impMid(rate, @implicit_midpoint_step, [t0 tf], X0, h);
         X_imp_mid_final = X_imp_mid(end,:)';
         errs_imp_mid (r) = norm(X_imp_mid_final - X_true);
         nfe_imp_mid (r)  = num_evals_imp_mid ;
@@ -65,8 +65,8 @@ function explicit_vs_implicit_global()
     figure(1); clf
     loglog(h_step, errs_F,  'ro', 'MarkerFaceColor','r', 'MarkerSize',4); hold on
     loglog(h_step, errs_B,  'ro', 'MarkerFaceColor','g', 'MarkerSize',4);
-    loglog(h_step, errs_exp_mid, 'bo', 'MarkerFaceColor','b', 'MarkerSize',4);
-    loglog(h_step, errs_imp_mid, 'bo', 'MarkerFaceColor','b', 'MarkerSize',4);
+    loglog(h_step, errs_exp_mid, 'bo', 'MarkerFaceColor','c', 'MarkerSize',4);
+    loglog(h_step, errs_imp_mid, 'bo', 'MarkerFaceColor','m', 'MarkerSize',4);
 
     filter_params = struct();
     filter_params.max_xval = 1;
@@ -77,10 +77,11 @@ function explicit_vs_implicit_global()
     %loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1.5);
     %loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1.5);
 
-    legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
+    %legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
 
     xlabel('Step size h');
     ylabel('Global truncation error');
+    legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
     title('Global Truncation Error vs Step Size');
 
 end
