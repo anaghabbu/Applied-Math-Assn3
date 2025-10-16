@@ -12,10 +12,6 @@ function assn3_test()
 
     X_exact = solution01(t_exact);
 
-%     plot(t_exact, X_exact, 'k-', 'LineWidth', 1.5); hold on;
-
-
-
     figure(1);
     plot(t_exact, X_exact, 'k-', 'LineWidth', 1.5); hold on;
     randColor = rand(10,3);
