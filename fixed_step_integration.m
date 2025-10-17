@@ -26,8 +26,10 @@ function [t_list,X_list,h_avg, num_evals] = fixed_step_integration(rate_func_in,
     
     num_evals = 0;
     for n =  1:n_steps
+        
         [Xval, num_evals_temp] = step_func(rate_func_in, t_list(n), Xval, h_avg);
         num_evals = num_evals + num_evals_temp;
+     
         X_list(n+1,:) = Xval';
     end
 

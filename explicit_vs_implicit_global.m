@@ -10,11 +10,6 @@ function explicit_vs_implicit_global()
     X0 = sol(t0);  
     X_true = sol(tf);   
 
-    forward_Eu = @forward_euler_fixed_step_integration;
-    backward_Eu = @fixed_step_integration;   %(rate, @backward_euler_step, [t0 tf],X0,h_ref);
-
-    expMid = @explicit_midpoint_fixed_step_integration;
-    impMid = @fixed_step_integration;  %(rate, @implicit_midpoint_step,[t0 tf],X0,h_ref);
 
     h_step = logspace(-4, -0.1, 50); 
 
@@ -35,30 +30,35 @@ function explicit_vs_implicit_global()
     % Step Size Loop
     for r = 1:length(h_step)
         h = h_step(r);
-
+      
         % Forward Euler
-        [t_F, X_F, h_avg_F, num_evals_F] = forward_Eu(rate, [t0 tf], X0, h);
+   
+        [t_F, X_F, h_avg_F, num_evals_F] = forward_euler_fixed_step_integration(rate, [t0 tf], X0, h);
+        
         X_F_final = X_F(end,:)';
         errs_F(r) = norm(X_F_final - X_true);
         nfe_F(r) = num_evals_F;
 
         % Backward Euler
-        [t_B, X_B, h_avg_B, num_evals_B] = backward_Eu(rate, @backward_euler_step,[t0 tf], X0, h);
+        
+        [t_B, X_B, h_avg_B, num_evals_B] = backward_euler_fixed_step_integration(rate, [t0 tf], X0, h);
+ 
         X_B_final = X_B(end,:)';
         errs_B(r) = norm(X_B_final - X_true);
         nfe_B(r) = num_evals_B;
 
         % Explicit Midpoint
-        [t_exp_mid, X_exp_mid, h_avg_exp_mid, num_evals_exp_mid] = expMid(rate, [t0 tf], X0, h);
+    
+        [t_exp_mid, X_exp_mid, h_avg_exp_mid, num_evals_exp_mid] = explicit_midpoint_fixed_step_integration(rate, [t0 tf], X0, h);
         X_exp_mid_final = X_exp_mid(end,:)';
         errs_exp_mid(r) = norm(X_exp_mid_final - X_true);
         nfe_exp_mid(r)  = num_evals_exp_mid;
 
-         % Implicit Midpoint
-        [t_imp_mid , X_imp_mid , h_avg_imp_mid , num_evals_imp_mid ] = impMid(rate, @implicit_midpoint_step, [t0 tf], X0, h);
+    
+        [t_imp_mid , X_imp_mid , h_avg_imp_mid , num_evals_imp_mid ] = implicit_midpoint_fixed_step_integration(rate, [t0 tf], X0, h);
         X_imp_mid_final = X_imp_mid(end,:)';
         errs_imp_mid (r) = norm(X_imp_mid_final - X_true);
-        nfe_imp_mid (r)  = num_evals_imp_mid ;
+        nfe_imp_mid(r)  = num_evals_imp_mid ;
     end
 
     % Error vs Step Size
@@ -67,7 +67,20 @@ function explicit_vs_implicit_global()
     loglog(h_step, errs_B,  'ro', 'MarkerFaceColor','g', 'MarkerSize',4);
     loglog(h_step, errs_exp_mid, 'bo', 'MarkerFaceColor','c', 'MarkerSize',4);
     loglog(h_step, errs_imp_mid, 'bo', 'MarkerFaceColor','m', 'MarkerSize',4);
+    
+    xlabel('Step size h');
+    ylabel('Global truncation error');
+    legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
+    title('Global Truncation Error vs Step Size');
 
+    % Error vs Step Size
+    figure(2); clf
+    loglog(nfe_F, errs_F,  'ro', 'MarkerFaceColor','r', 'MarkerSize',4); hold on
+    loglog(nfe_B, errs_B,  'ro', 'MarkerFaceColor','g', 'MarkerSize',4);
+    loglog(nfe_exp_mid, errs_exp_mid, 'bo', 'MarkerFaceColor','c', 'MarkerSize',4);
+    loglog(nfe_imp_mid, errs_imp_mid, 'bo', 'MarkerFaceColor','m', 'MarkerSize',4);
+
+    
     filter_params = struct();
     filter_params.max_xval = 1;
 
@@ -79,9 +92,9 @@ function explicit_vs_implicit_global()
 
     %legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
 
-    xlabel('Step size h');
-    ylabel('Global truncation error');
+    xlabel('function call rate');
+    ylabel('global truncation error');
     legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
-    title('Global Truncation Error vs Step Size');
+    title('Global Truncation Error vs Function Call Rate');
 
 end

@@ -21,7 +21,7 @@ function [XB,num_evals] = backward_euler_step(rate_func_in,t,XA,h)
     solver_params.max_iter = 50;
     solver_params.dxmax = 1e3;
     solver_params.numerical_diff = true;
-
+  
     [XB, num_evals]  = multi_newton_solver2(G,XA,solver_params);    
 
     % G_xnplus1 = XA + h*rate_func_in(t + h, )

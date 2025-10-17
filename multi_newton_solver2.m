@@ -47,19 +47,18 @@ function [x_root, num_evals] = multi_newton_solver2(fun,x_guess,solver_params)
  
     if numerical_diff
         % size of x_guess
-        size(x_guess)
         fval = fun(x_guess);
-        [J, Jnum] = approximate_jacobian2(fun, x_guess);
+        [~, Jnum] = approximate_jacobian2(fun, x_guess);
         num_evals = num_evals + Jnum;
         
     else
-        [fval,J] = fun(x_guess);
+        [fval,~] = fun(x_guess);
         num_evals = num_evals + 1;
     end
 
     count = 0;
     delta_x = 1;
-    num_evals = 0;
+    % num_evals = 0;
 
     while count < max_iter && norm(fval)> ftol && norm(delta_x) > dxtol && norm(delta_x) < dxmax
         
@@ -69,11 +68,12 @@ function [x_root, num_evals] = multi_newton_solver2(fun,x_guess,solver_params)
             % 'size of x_guess';
             % size(x_guess)
             fval = fun(x_guess);
+            num_evals = num_evals + 1;
             % 'size fval'
             % size(fval)
 
             [J, Jnum] = approximate_jacobian2(fun, x_guess);
-            num_evals = num_evals + 1;
+            num_evals = num_evals + Jnum;
          
         else
             [fval,J] = fun(x_guess);
@@ -88,10 +88,10 @@ function [x_root, num_evals] = multi_newton_solver2(fun,x_guess,solver_params)
     
     x_root = x_guess;
 
-    disp('Root is approx: ');
-    disp(x_root);
-    
-    f_check = fun(x_root);
-    disp('f(X_new) = ');
-    disp(f_check);
+    % disp('Root is approx: ');
+    % disp(x_root);
+    % 
+    % f_check = fun(x_root);
+    % disp('f(X_new) = ');
+    % disp(f_check);
 end

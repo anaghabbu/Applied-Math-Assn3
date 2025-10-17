@@ -11,24 +11,9 @@
 %h_avg: the average step size
 %num_evals: total number of calls made to rate_func_in during the integration
 function [t_list,X_list,h_avg, num_evals] = ...
-    forward_euler_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
-    
-    % n_steps = ceil((tspan(2) - tspan(1))/h_ref);
-    % h_avg = (tspan(2) - tspan(1))/n_steps;
-    % 
-    % t_list = linspace(tspan(1),tspan(2),n_steps+1)';
-    % X_list =  zeros(length(t_list),length(X0));
-    % 
-    % Xval =  X0;
-    % X_list(1,:) = Xval;
-    % 
-    % num_evals = 0;
-    % for n =  1:n_steps
-    %     [Xval, num_evals_temp] = forward_euler_step(rate_func_in, t_list(n), Xval, h_avg);
-    %     num_evals = num_evals + num_evals_temp;
-    %     X_list(n+1,:) = Xval';
-    % end
-    [t_list,X_list,h_avg, num_evals] = fixed_step_integration(rate_func_in,@forward_euler_step,tspan,X0,h_ref);
+    backward_euler_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
+
+    [t_list,X_list,h_avg, num_evals] = fixed_step_integration(rate_func_in,@backward_euler_step,tspan,X0,h_ref);
 end
 
 % 
