@@ -65,13 +65,13 @@ function explicit_v_implicit_trunc()
     legend('Forward Euler','Backward Euler', 'Explicit Midpoint', 'Implicit Midpoint')
     title('Local Truncation Error for Explicit and Implicit Methods')
 
-    %[p1,k1] = loglog_fit(h_step, analytical_diff, filter_params);
-    %[p2,k2] = loglog_fit(h_step, errs_forward, filter_params);
-    %[p3,k3] = loglog_fit(h_step, errs_backward, filter_params);
+    [p1,k1] = loglog_fit(h_step, analytical_diff, filter_params);
+    [p2,k2] = loglog_fit(h_step, errs_forward, filter_params);
+    [p3,k3] = loglog_fit(h_step, errs_backward, filter_params);
 
-    %loglog(h_step,k1*h_step.^p1,'g','LineWidth',1)
-    %loglog(h_step,k2*h_step.^p2,'r','LineWidth',1)
-    %loglog(h_step,k3*h_step.^p3,'b','LineWidth',1)
+    loglog(h_step,k1*h_step.^p1,'g','LineWidth',1)
+    loglog(h_step,k2*h_step.^p2,'r','LineWidth',1)
+    loglog(h_step,k3*h_step.^p3,'b','LineWidth',1)
 
 
     % is y = k*x^p the same as e = O*h^p? 
