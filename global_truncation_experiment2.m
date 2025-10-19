@@ -1,9 +1,9 @@
-function global_truncation_experiment()
+function global_truncation_experiment2()
 
     t0 = 0;
     tf = 1;
-    sol = @solution01;    
-    rate = @rate_func01;
+    sol = @solution02;    
+    rate = @rate_func02;
 
     X0 = sol(t0);  
     X_true = sol(tf);   
@@ -57,7 +57,7 @@ function global_truncation_experiment()
     figure(1); clf
     loglog(h_step, errs_FE,  'ro', 'MarkerFaceColor','r', 'MarkerSize',2); hold on
     loglog(h_step, errs_Mid, 'bo', 'MarkerFaceColor','b', 'MarkerSize',2);
-    loglog(h_step, errs_backEu,  'yo', 'MarkerFaceColor','y', 'MarkerSize',2); 
+    loglog(h_step, errs_backEu,  'co', 'MarkerFaceColor','y', 'MarkerSize',2); 
     loglog(h_step, errs_impMid, 'mo', 'MarkerFaceColor','m', 'MarkerSize',2);
 
     filter_params = struct();
@@ -69,14 +69,14 @@ function global_truncation_experiment()
     [p_impMid, k_impMid] = loglog_fit(h_step, errs_impMid, filter_params);
 
 
-    loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1);
-    loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1);
-    loglog(h_step, k_backEu*h_step.^p_backEu, 'y-', 'LineWidth', 1);
-    loglog(h_step, k_impMid*h_step.^p_impMid, 'm-', 'LineWidth', 1);
+%     loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1);
+%     loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1);
+%     loglog(h_step, k_backEu*h_step.^p_backEu, 'y-', 'LineWidth', 1);
+%     loglog(h_step, k_impMid*h_step.^p_impMid, 'm-', 'LineWidth', 1);
 
     legend(sprintf('Forward Euler (p = %.4f)', p_FE), sprintf('Midpoint (p = %.4f)', p_Mid),  sprintf('Backward Euler (p = %.4f)', p_backEu),  sprintf('Implicit Midpoint (p = %.4f)', p_impMid),'Location','northwest');
 
     xlabel('step size h');
     ylabel('global truncation error');
-    title('Explicit Global Truncation Error vs Step Size for Solution 1');
+    title('All Methods Global Truncation Error vs Step Size for Solution 2');
 end

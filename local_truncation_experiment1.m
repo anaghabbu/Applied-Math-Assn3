@@ -6,10 +6,10 @@
 %[p,k]: the regressed values for relationship y = k*x^p
 %function [p,k] = loglog_fit(x_regression,y_regression,varargin)
 
-function local_truncation_experiment2()
+function local_truncation_experiment1()
     tref = 0.492;
-    sol = @solution02;
-    rate = @rate_func02;
+    sol = @solution01;
+    rate = @rate_func01;
 
     % Single step function methods
     forEu = @forward_euler_step
@@ -50,12 +50,12 @@ function local_truncation_experiment2()
     % plot(errs(i), h);
     
     figure(1);
-    loglog(h_step,analytical_diff,'ko','MarkerFaceColor','k','MarkerSize',1);
-    hold on
-    loglog(h_step,errs_FE,'ro','MarkerFaceColor','r','MarkerSize',1);
+%     loglog(h_step,analytical_diff,'ko','MarkerFaceColor','k','MarkerSize',1);
+%     hold on
+    loglog(h_step,errs_FE,'ro','MarkerFaceColor','r','MarkerSize',1); hold on;
     loglog(h_step,errs_Mid,'bo','MarkerFaceColor','b','MarkerSize',1);
 
-    loglog(h_step,errs_backEu,'yo','MarkerFaceColor','y','MarkerSize',1);
+    loglog(h_step,errs_backEu,'go','MarkerFaceColor','g','MarkerSize',1);
     loglog(h_step,errs_impMid,'mo','MarkerFaceColor','m','MarkerSize',1);
 
 
@@ -63,31 +63,35 @@ function local_truncation_experiment2()
 
     filter_params.max_xval = 1;
 
-    [p1,k1] = loglog_fit(h_step, analytical_diff, filter_params);
+%     [p1,k1] = loglog_fit(h_step, analytical_diff, filter_params);
     [p2,k2] = loglog_fit(h_step, errs_FE, filter_params);
     [p3,k3] = loglog_fit(h_step, errs_Mid, filter_params);
     
     [p4,k4] = loglog_fit(h_step, errs_backEu, filter_params);
     [p5,k5] = loglog_fit(h_step, errs_impMid, filter_params);
+% 
+%     loglog(h_step,k1*h_step.^p1,'g','LineWidth',1)
+%     loglog(h_step,k2*h_step.^p2,'r','LineWidth',1)
+%     loglog(h_step,k3*h_step.^p3,'b','LineWidth',1)
+% 
+%     loglog(h_step,k4*h_step.^p4,'y','LineWidth',1)
+%     loglog(h_step,k5*h_step.^p5,'m','LineWidth',1)
 
-    loglog(h_step,k1*h_step.^p1,'g','LineWidth',1)
-    loglog(h_step,k2*h_step.^p2,'r','LineWidth',1)
-    loglog(h_step,k3*h_step.^p3,'b','LineWidth',1)
 
-    loglog(h_step,k4*h_step.^p4,'y','LineWidth',1)
-    loglog(h_step,k5*h_step.^p5,'m','LineWidth',1)
-
-
-    legend(sprintf('Analytical Difference (p = %.4f)', p1), sprintf('Forward Euler (p = %.4f)', p2), sprintf('Explict Midpoint (p = %.4f)', p3),  sprintf('Backward Euler (p = %.4f)', p4),  sprintf('Implicit Midpoint (p = %.4f)', p5), 'Analytical difference fit line','Forward Euler fit line', 'Explicit Midpoint fit line', 'Backward Euler fit line', 'Implicit Midpoint fit line');
+    legend(sprintf('Forward Euler (p = %.4f)', p2), sprintf('Explict Midpoint (p = %.4f)', p3),  sprintf('Backward Euler (p = %.4f)', p4),  sprintf('Implicit Midpoint (p = %.4f)', p5));
     xlabel('h step')
     ylabel('Error')
-    title('Local Truncation Error for Explicit Methods Solution 2')
+
+    title('Local Truncation Error for All Methods to Solution 1')
 
     disp(p1)
     disp(p2)
     disp(p3)
     disp(p4)
     disp(p5)
+
+    xlabel('')
+    ylabel('Error')
 
     % is y = k*x^p the same as e = O*h^p? 
     % [p,k] = loglog_fit(h_step, errs, 1)
