@@ -79,24 +79,36 @@ function explicit_vs_implicit_global()
     loglog(nfe_B, errs_B,  'ro', 'MarkerFaceColor','g', 'MarkerSize',4);
     loglog(nfe_exp_mid, errs_exp_mid, 'bo', 'MarkerFaceColor','c', 'MarkerSize',4);
     loglog(nfe_imp_mid, errs_imp_mid, 'bo', 'MarkerFaceColor','m', 'MarkerSize',4);
-
     
-    filter_params = struct();
-    filter_params.max_xval = 1;
-
-    [p_FE, k_FE]   = loglog_fit(h_step, errs_FE, filter_params);
-    [p_Mid, k_Mid] = loglog_fit(h_step, errs_Mid, filter_params);
-
-    loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1.5);
-    loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1.5);
-
-    legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
-
-
-    xlabel('function call rate');
-    ylabel('global truncation error');
-    legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
+    [p_F, k_F]   = loglog_fit(h_step, errs_F, filter_params);
+    [p_B, k_B] = loglog_fit(h_step, errs_B, filter_params);
+    [p_Mid, k_Mid] = loglog_fit(h_step, errs_exp_mid, filter_params);
+    [p_impMid, k_impMid] = loglog_fit(h_step, errs_imp_mid, filter_params);
+ 
+    xlabel('Function Call Rate');
+    ylabel('Global truncation error');
+%   legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
+    legend(sprintf('Forward Euler (p = %.4f)', p_F), sprintf('Backward (p = %.4f)', p_B), sprintf('Explicit Midpoint (p = %.4f)', p_Mid),sprintf('Implicit Midpoint(p = %.4f)',p_impMid), 'Location','northwest');
     title('Global Truncation Error vs Function Call Rate');
+% 
+%     filter_params = struct();
+%     filter_params.max_xval = 1;
+% 
+
+%     loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1.5);
+%     loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1.5);
+% 
+%    
+% 
+% 
+%     xlabel('function call rate');
+%     ylabel('global truncation error');
+%     legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
+%     title('Global Truncation Error vs Function Call Rate');
+
+
+
+
     % 
     % [p_FE, k_FE]   = loglog_fit(h_step, errs_FE, filter_params);
     % [p_Mid, k_Mid] = loglog_fit(h_step, errs_Mid, filter_params);
