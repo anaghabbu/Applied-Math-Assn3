@@ -84,16 +84,25 @@ function explicit_vs_implicit_global()
     filter_params = struct();
     filter_params.max_xval = 1;
 
-    xlabel('function call rate');
-    ylabel('global truncation error');
-    legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
-    title('Global Truncation Error vs Function Call Rate');
-
     [p_FE, k_FE]   = loglog_fit(h_step, errs_FE, filter_params);
     [p_Mid, k_Mid] = loglog_fit(h_step, errs_Mid, filter_params);
 
     loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1.5);
     loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1.5);
+
+    legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
+
+
+    xlabel('function call rate');
+    ylabel('global truncation error');
+    legend('Forward Euler', 'Backward', 'Explicit Midpoint', 'Implicit Midpoint')
+    title('Global Truncation Error vs Function Call Rate');
+    % 
+    % [p_FE, k_FE]   = loglog_fit(h_step, errs_FE, filter_params);
+    % [p_Mid, k_Mid] = loglog_fit(h_step, errs_Mid, filter_params);
+    % 
+    % loglog(h_step, k_FE*h_step.^p_FE, 'r-', 'LineWidth', 1.5);
+    % loglog(h_step, k_Mid*h_step.^p_Mid, 'b-', 'LineWidth', 1.5);
 
     %legend(sprintf('Forward Euler (p = %.2f)', p_FE), sprintf('Midpoint (p = %.2f)', p_Mid),'Location','northwest');
 
